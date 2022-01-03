@@ -1,7 +1,7 @@
 name: flutter_filter_dialog
 description: A Spisoft Flutter package
-version: 1.0.0
-#author:  J.Sharifian <spisoftco@gmail.com>
+version: 5.1.1
+#author: J.Sharifian <spisoftco@gmail.com>
 homepage: https://github.com/SPSpisoft/flutter_filter_dialog
 
 environment:
