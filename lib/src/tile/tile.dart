@@ -33,6 +33,8 @@ class S2Tile<T> extends StatelessWidget {
   /// Whether this list tile is intended to display loading stats.
   final bool isLoading;
 
+  final bool isRtl;
+
   /// String text used as loading text
   final String? loadingText;
 
@@ -95,6 +97,7 @@ class S2Tile<T> extends StatelessWidget {
     this.loadingMessage,
     this.loadingIndicator,
     this.isLoading = false,
+    this.isRtl = true,
     this.isError = false,
     this.isTwoLine = false,
     this.enabled = true,
@@ -120,6 +123,7 @@ class S2Tile<T> extends StatelessWidget {
     this.loadingMessage,
     this.loadingIndicator,
     this.isTwoLine = false,
+    this.isRtl = true,
     this.enabled = true,
     this.selected = false,
     this.dense = false,
@@ -134,10 +138,12 @@ class S2Tile<T> extends StatelessWidget {
         super(key: key);
 
   /// Returns default trailing widget
-  static const Widget defaultTrailing = const Icon(
-    Icons.keyboard_arrow_right,
-    color: Colors.grey,
-  );
+  Widget get defaultTrailing {
+    return Icon(
+      isRtl ? Icons.keyboard_arrow_left : Icons.keyboard_arrow_right,
+      color: Colors.grey,
+    );
+  }
 
   /// Returns default loading indicator widget
   static const Widget defaultLoadingIndicator = const SizedBox(
@@ -201,7 +207,7 @@ class S2Tile<T> extends StatelessWidget {
     return isLoading != true
         ? trailing != null
             ? trailing
-            : S2Tile.defaultTrailing
+            : defaultTrailing
         : S2Tile.defaultLoadingIndicator;
   }
 
