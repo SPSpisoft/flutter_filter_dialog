@@ -76,6 +76,8 @@ class SmartSelect<T> extends StatefulWidget {
   /// as single choice or multiple choice
   final bool isMultiChoice;
 
+  final bool? isRtl;
+
   /// Initial selected choice
   final S2SingleSelected<T>? singleSelected;
 
@@ -142,6 +144,7 @@ class SmartSelect<T> extends StatefulWidget {
     this.title,
     this.placeholder,
     required this.isMultiChoice,
+    this.isRtl,
     this.singleSelected,
     this.singleValidation,
     this.singleModalValidation,
@@ -435,6 +438,7 @@ class SmartSelect<T> extends StatefulWidget {
     bool? modalHeader,
     bool? modalFilter,
     bool? modalFilterAuto,
+    bool? isRtl,
     String? modalFilterHint,
   }) {
     S2ChoiceConfig defaultChoiceConfig = const S2ChoiceConfig(
@@ -449,6 +453,7 @@ class SmartSelect<T> extends StatefulWidget {
       choiceItems: choiceItems,
       choiceLoader: choiceLoader,
       isMultiChoice: false,
+      isRtl: true,
       singleSelected: S2SingleSelected<T>(
         value: selectedValue,
         choice: selectedChoice,
@@ -758,6 +763,7 @@ class SmartSelect<T> extends StatefulWidget {
     bool? modalHeader,
     bool? modalFilter,
     bool? modalFilterAuto,
+    bool? isRtl,
     String? modalFilterHint,
   }) {
     S2ChoiceConfig defaultChoiceConfig = const S2ChoiceConfig(
@@ -1000,7 +1006,14 @@ abstract class S2State<T> extends State<SmartSelect<T>> {
   String? get title => widget.title ?? modalConfig.title;
 
   /// Returns [title] in `Text` widget
-  Widget get titleWidget => Text(title!);
+  // Widget get titleWidget => Text(title!);
+
+  Widget titleWidget(TextStyle? _textStyle) {
+    return Text(
+      title!,
+      style: _textStyle,
+    );
+  }
 
   /// Returns the modal widget
   Widget get modal {
@@ -2155,7 +2168,4 @@ class S2MultiState<T> extends S2State<T> {
 //   }
 
 //   @override
-//   bool updateShouldNotify(S2StateProvider oldWidget) {
-//     return oldWidget.state != state;
-//   }
-// }
+//   bool updateShouldNotify(S2StateProvider oldWidge

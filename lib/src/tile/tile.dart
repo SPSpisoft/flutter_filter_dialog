@@ -117,6 +117,7 @@ class S2Tile<T> extends StatelessWidget {
     Widget? title,
     bool? isError,
     bool? isLoading,
+    TextStyle? textStyle,
     this.leading,
     this.trailing,
     this.loadingText,
@@ -130,7 +131,7 @@ class S2Tile<T> extends StatelessWidget {
     this.hideValue = false,
     this.padding,
     this.body,
-  })  : title = title ?? state.titleWidget,
+  })  : title = title ?? state.titleWidget(textStyle),
         value = value ?? Text(state.selected.toString()),
         onTap = onTap ?? state.showModal,
         isLoading = isLoading ?? state.selected?.isResolving ?? false,
@@ -158,6 +159,7 @@ class S2Tile<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return body == null ? _tileWidget : _tileWithBodyWidget;
   }
+
 
   Widget get _tileWidget {
     return ListTile(
