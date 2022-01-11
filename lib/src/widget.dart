@@ -43,6 +43,8 @@ typedef void S2ModalClose<T>(T state, bool confirmed);
 /// Callback for event choice select
 typedef void S2ChoiceSelect<A, B>(A state, B choice);
 
+typedef List<T> S2RefreshSelect<T>(T state);
+
 // /// Signature for callbacks that report that an underlying two value has changed.
 // typedef void TwoValueChanged<A, B>(A firstValue, B secondValue);
 
@@ -93,6 +95,8 @@ class SmartSelect<T> extends StatefulWidget {
   /// Called when selection has been made in single choice widget
   final S2ChoiceSelect<S2SingleState<T>, S2Choice<T>>? singleOnSelect;
 
+  final S2RefreshSelect<List<T>>? singleOnRefresh;
+
   /// Called when modal opened in single choice widget
   final S2ModalOpen<S2SingleState<T>>? singleOnModalOpen;
 
@@ -123,6 +127,14 @@ class SmartSelect<T> extends StatefulWidget {
   /// Called when selection has been made in multiple choice widget
   final S2ChoiceSelect<S2MultiState<T>, S2Choice<T>>? multiOnSelect;
 
+  final S2RefreshSelect<List<T>>? multiOnRefresh;
+
+  S2RefreshSelect<List<T>>? multiRefresh(List<T> m) {
+    // TODO: implement multiRefresh
+    this.multiSelected!.value = m;
+    throw UnimplementedError();
+  }
+
   /// Called when modal open in multiple choice widget
   final S2ModalOpen<S2MultiState<T>>? multiOnModalOpen;
 
@@ -150,6 +162,7 @@ class SmartSelect<T> extends StatefulWidget {
     this.singleModalValidation,
     this.singleOnChange,
     this.singleOnSelect,
+    this.singleOnRefresh,
     this.singleOnModalOpen,
     this.singleOnModalClose,
     this.singleOnModalWillOpen,
@@ -160,6 +173,7 @@ class SmartSelect<T> extends StatefulWidget {
     this.multiModalValidation,
     this.multiOnChange,
     this.multiOnSelect,
+    this.multiOnRefresh,
     this.multiOnModalOpen,
     this.multiOnModalClose,
     this.multiOnModalWillOpen,
@@ -382,6 +396,7 @@ class SmartSelect<T> extends StatefulWidget {
     S2SingleSelectedResolver<T>? selectedResolver,
     ValueChanged<S2SingleSelected<T?>>? onChange,
     S2ChoiceSelect<S2SingleState<T>, S2Choice<T>>? onSelect,
+    S2RefreshSelect<List<T>>? onRefresh,
     S2ModalOpen<S2SingleState<T>>? onModalOpen,
     S2ModalClose<S2SingleState<T>>? onModalClose,
     S2ModalWillOpen<S2SingleState<T>>? onModalWillOpen,
@@ -463,6 +478,7 @@ class SmartSelect<T> extends StatefulWidget {
       ),
       singleOnChange: onChange,
       singleOnSelect: onSelect,
+      singleOnRefresh: onRefresh,
       singleOnModalOpen: onModalOpen,
       singleOnModalClose: onModalClose,
       singleOnModalWillOpen: onModalWillOpen,
@@ -708,6 +724,7 @@ class SmartSelect<T> extends StatefulWidget {
     S2MultiSelectedResolver<T>? selectedResolver,
     ValueChanged<S2MultiSelected<T>?>? onChange,
     S2ChoiceSelect<S2MultiState<T>, S2Choice<T>>? onSelect,
+    S2RefreshSelect<List<T>>? onRefresh,
     S2ModalOpen<S2MultiState<T>>? onModalOpen,
     S2ModalClose<S2MultiState<T>>? onModalClose,
     S2ModalWillOpen<S2MultiState<T>>? onModalWillOpen,
@@ -771,6 +788,7 @@ class SmartSelect<T> extends StatefulWidget {
     );
     S2ModalConfig defaultModalConfig = const S2ModalConfig();
     S2GroupConfig defaultGroupConfig = const S2GroupConfig();
+
     return SmartSelect<T>(
       key: key,
       title: title,
@@ -787,6 +805,7 @@ class SmartSelect<T> extends StatefulWidget {
       ),
       multiOnChange: onChange,
       multiOnSelect: onSelect,
+      multiOnRefresh: onRefresh,
       multiOnModalOpen: onModalOpen,
       multiOnModalClose: onModalClose,
       multiOnModalWillOpen: onModalWillOpen,
@@ -1731,6 +1750,10 @@ class S2SingleState<T> extends S2State<T> {
     widget.singleOnSelect?.call(this, choice);
   }
 
+  void onRefresh(List<T> select) {
+    widget.singleOnRefresh?.call(select);
+  }
+
   @override
   void onModalOpen() {
     widget.singleOnModalOpen?.call(this);
@@ -1923,6 +1946,11 @@ class S2MultiState<T> extends S2State<T> {
   @override
   S2MultiSelection<T>? selection;
 
+  refresh(List<T>? reSelectedValue){
+    widget.multiSelected!.value = reSelectedValue;
+    setState(() { });
+  }
+
   @override
   void onChange() {
     // set cache to final value
@@ -1934,6 +1962,10 @@ class S2MultiState<T> extends S2State<T> {
   @override
   void onSelect(S2Choice<T> choice) {
     widget.multiOnSelect?.call(this, choice);
+  }
+
+  void onRefresh(List<T> select) {
+    widget.multiOnRefresh?.call(select);
   }
 
   @override

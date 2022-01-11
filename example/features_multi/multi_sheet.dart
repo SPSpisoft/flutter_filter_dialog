@@ -9,14 +9,16 @@ class FeaturesMultiSheet extends StatefulWidget {
 
 class _FeaturesMultiSheetState extends State<FeaturesMultiSheet> {
   List<String>? _os = ['and', 'tux'];
+  List<String>? _os_new = ['win'];
   List<String>? _hero = ['bat', 'spi'];
 
   @override
   Widget build(BuildContext context) {
+    SmartSelect<String> v;
     return Column(
       children: <Widget>[
         const SizedBox(height: 7),
-        SmartSelect<String>.multiple(
+        v = SmartSelect<String>.multiple(
           title: 'OS',
           selectedValue: _os,
           onChange: (selected) => setState(() => _os = selected?.value),
@@ -34,7 +36,11 @@ class _FeaturesMultiSheetState extends State<FeaturesMultiSheet> {
             );
           },
         ),
-        const Divider(indent: 20),
+        InkWell(onTap: (){
+          v.multiOnRefresh!(_os_new!);
+          v.multiRefresh(_os_new!);
+        },
+            child: const Divider(indent: 20)),
         SmartSelect<String>.multiple(
           title: 'Super Hero',
           selectedValue: _hero,
