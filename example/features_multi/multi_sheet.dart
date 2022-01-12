@@ -37,7 +37,6 @@ class _FeaturesMultiSheetState extends State<FeaturesMultiSheet> {
           },
         ),
         InkWell(onTap: (){
-          v.choiceItems =
           v.multiOnRefresh!(_os_new!);
           v.multiRefresh(_os_new!);
         },
