@@ -1949,7 +1949,7 @@ class S2MultiState<T> extends S2State<T> {
   refresh(List<T>? reSelectedValue){
     widget.multiSelected!.value = reSelectedValue;
     resolveSelected();
-    resolveChoices();
+    // resolveChoices();
     setState(() { });
   }
 
