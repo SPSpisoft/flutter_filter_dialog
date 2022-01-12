@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-
+import 'features_single/single_main.dart';
+import 'features_multi/multi_main.dart';
+import 'features_tile/tile_main.dart';
+import 'features_option/option_main.dart';
+import 'features_modal/modal_main.dart';
+import 'features_choices/choices_main.dart';
 import 'features_brightness.dart';
 import 'features_color.dart';
-import 'features_multi/multi_main.dart';
-import 'features_single/single_main.dart';
+// import 'features_theme.dart';
 import 'keep_alive.dart';
 
 class Features extends StatelessWidget {
@@ -21,10 +25,10 @@ class Features extends StatelessWidget {
             tabs: [
               Tab(text: 'Single Choice'),
               Tab(text: 'Multiple Choice'),
-              // Tab(text: 'Choices Option'),
-              // Tab(text: 'Choices Widget'),
-              // Tab(text: 'Customize Modal'),
-              // Tab(text: 'Customize Tile'),
+              Tab(text: 'Choices Option'),
+              Tab(text: 'Choices Widget'),
+              Tab(text: 'Customize Modal'),
+              Tab(text: 'Customize Tile'),
             ],
           ),
           actions: <Widget>[
@@ -44,18 +48,18 @@ class Features extends StatelessWidget {
             KeepAliveWidget(
               child: FeaturesMulti(),
             ),
-            // KeepAliveWidget(
-            //   child: FeaturesOption(),
-            // ),
-            // KeepAliveWidget(
-            //   child: FeaturesChoices(),
-            // ),
-            // KeepAliveWidget(
-            //   child: FeaturesModal(),
-            // ),
-            // KeepAliveWidget(
-            //   child: FeaturesTile(),
-            // ),
+            KeepAliveWidget(
+              child: FeaturesOption(),
+            ),
+            KeepAliveWidget(
+              child: FeaturesChoices(),
+            ),
+            KeepAliveWidget(
+              child: FeaturesModal(),
+            ),
+            KeepAliveWidget(
+              child: FeaturesTile(),
+            ),
           ],
         ),
         // bottomNavigationBar: Card(

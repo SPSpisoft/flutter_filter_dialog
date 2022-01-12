@@ -1,5 +1,6 @@
+// import 'package:awesome_select/awesome_select.dart' show S2Choice;
 
-import 'package:flutter_filter_dialog/flutter_filter_dialog.dart';
+import '../flutter_filter_dialog.dart';
 
 List<S2Choice<String>> days = [
   S2Choice<String>(value: 'mon', title: 'Monday'),

@@ -1949,10 +1949,20 @@ class S2MultiState<T> extends S2State<T> {
   refresh(List<T>? reSelectedValue){
     widget.multiSelected!.value = reSelectedValue;
 
-    resolveSelection();
+    selected = widget.multiSelected!
+      ..addListener(_selectedHandler)
+      ..resolve(defaultResolver: (value) async {
+        return widget.choiceItems
+            ?.where(
+                (S2Choice<T> item) => value?.contains(item.value) ?? false)
+            .toList()
+            .cast<S2Choice<T>>();
+      });
+    // didUpdateWidget(this.widget);
+    // resolveSelection();
     // resolveSelected();
-    resolveChoices();
-    setState(() { });
+    // resolveChoices();
+    // setState(() { });
   }
 
   @override

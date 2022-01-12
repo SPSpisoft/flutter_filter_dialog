@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:sticky_headers/sticky_headers/widget.dart';
-import '../features_header.dart';
+import 'package:sticky_headers/sticky_headers.dart';
 import './single_page.dart';
 import './single_sheet.dart';
 import './single_popup.dart';
 import './single_chips.dart';
 import './single_switches.dart';
+import '../features_header.dart';
 import '../keep_alive.dart';
 
 class FeaturesSingle extends StatelessWidget {

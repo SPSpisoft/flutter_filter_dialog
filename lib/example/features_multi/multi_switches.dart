@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_filter_dialog/flutter_filter_dialog.dart';
+import '../../flutter_filter_dialog.dart';
 import '../choices.dart' as choices;
 
-class FeaturesSingleSwitches extends StatefulWidget {
+class FeaturesMultiSwitches extends StatefulWidget {
   @override
-  _FeaturesSingleSwitchesState createState() => _FeaturesSingleSwitchesState();
+  _FeaturesMultiSwitchesState createState() => _FeaturesMultiSwitchesState();
 }
 
-class _FeaturesSingleSwitchesState extends State<FeaturesSingleSwitches> {
-  String? _car;
-  String? _smartphone;
-  String? _days;
+class _FeaturesMultiSwitchesState extends State<FeaturesMultiSwitches> {
+  List<String>? _car = [];
+  List<String>? _smartphone = [];
+  List<String>? _days = [];
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         const SizedBox(height: 7),
-        SmartSelect<String?>.single(
+        SmartSelect<String>.multiple(
           title: 'Car',
           selectedValue: _car,
-          onChange: (selected) => setState(() => _car = selected.value),
+          onChange: (selected) => setState(() => _car = selected?.value),
           choiceItems: S2Choice.listFrom<String, Map<String, String>>(
             source: choices.cars,
             value: (index, item) => item['value'] ?? '',
@@ -43,11 +43,11 @@ class _FeaturesSingleSwitchesState extends State<FeaturesSingleSwitches> {
           },
         ),
         const Divider(indent: 20),
-        SmartSelect<String?>.single(
+        SmartSelect<String>.multiple(
           title: 'Smartphones',
           selectedValue: _smartphone,
           onChange: (selected) {
-            setState(() => _smartphone = selected.value);
+            setState(() => _smartphone = selected?.value);
           },
           choiceType: S2ChoiceType.switches,
           choiceItems: S2Choice.listFrom<String, Map<String, String>>(
@@ -70,14 +70,13 @@ class _FeaturesSingleSwitchesState extends State<FeaturesSingleSwitches> {
           },
         ),
         const Divider(indent: 20),
-        SmartSelect<String?>.single(
+        SmartSelect<String>.multiple(
           title: 'Days',
           selectedValue: _days,
-          onChange: (selected) => setState(() => _days = selected.value),
+          onChange: (selected) => setState(() => _days = selected?.value),
           choiceItems: choices.days,
           choiceType: S2ChoiceType.switches,
           modalType: S2ModalType.popupDialog,
-          modalConfirm: true,
           tileBuilder: (context, state) {
             return S2Tile.fromState(
               state,

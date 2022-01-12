@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_filter_dialog/flutter_filter_dialog.dart';
+import '../../flutter_filter_dialog.dart';
 import '../choices.dart' as choices;
 
 class FeaturesMultiSheet extends StatefulWidget {
@@ -9,16 +9,14 @@ class FeaturesMultiSheet extends StatefulWidget {
 
 class _FeaturesMultiSheetState extends State<FeaturesMultiSheet> {
   List<String>? _os = ['and', 'tux'];
-  List<String>? _os_new = ['win'];
   List<String>? _hero = ['bat', 'spi'];
 
   @override
   Widget build(BuildContext context) {
-    SmartSelect<String> v;
     return Column(
       children: <Widget>[
         const SizedBox(height: 7),
-        v = SmartSelect<String>.multiple(
+        SmartSelect<String>.multiple(
           title: 'OS',
           selectedValue: _os,
           onChange: (selected) => setState(() => _os = selected?.value),
@@ -28,19 +26,21 @@ class _FeaturesMultiSheetState extends State<FeaturesMultiSheet> {
             return S2Tile.fromState(
               state,
               isTwoLine: true,
-              leading: const CircleAvatar(
-                backgroundImage: NetworkImage(
-                  'https://source.unsplash.com/xsGxhtAsfSA/100x100',
+              leading: InkWell(
+                onTap: () {
+                  _os?.removeAt(0);
+                  state.refresh(_os);
+                },
+                child: const CircleAvatar(
+                  backgroundImage: NetworkImage(
+                    'https://source.unsplash.com/xsGxhtAsfSA/100x100',
+                  ),
                 ),
               ),
             );
           },
         ),
-        InkWell(onTap: (){
-          v.multiOnRefresh!(_os_new!);
-          v.multiRefresh(_os_new!);
-        },
-            child: const Divider(indent: 20)),
+        const Divider(indent: 20),
         SmartSelect<String>.multiple(
           title: 'Super Hero',
           selectedValue: _hero,

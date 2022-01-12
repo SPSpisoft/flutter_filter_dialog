@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_filter_dialog/flutter_filter_dialog.dart';
+
+import '../flutter_filter_dialog.dart';
 
 class FeaturesBrightness extends StatefulWidget {
   @override
