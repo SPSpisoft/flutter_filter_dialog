@@ -16,30 +16,7 @@ Customized SmartSelect package.
 About SmartSelect #
 SmartSelect allows you to easily convert your usual form select or dropdown into dynamic page, popup dialog, or sliding bottom sheet with various choices input such as radio, checkbox, switch, chips, or even custom input. Supports single and multiple choice. Inspired by Smart Select component from Framework7.
 
-## Features
-
-What's New in Version 4.x.x 
-Customizable every part on modal widget (header, footer, searchbar, confirm button, searchbar toggle) using style configuration or widget builder
-Validate before confirm
-Auto search on type
-Accent marks handler on search
-Highlight search result
-Chips tile widget
-Grid choice layout
-Horizotal or vertical choice list scroll direction
-Simplify class name and enum
-Configurations supports copyWith and merge
-Use StatefulWidget as state management
-Easy shortcut to define configuration
-Soft depends to other package
-To Do 
-Right-To-Left parameter support, currently this can be achieved using widget builder
-Internally handle async choice items loader
-Custom search handler
-Choice items pagination (pull to refresh and pull to load more)
-Add more test
-Migration from 4.0.0 to 4.2.0 
-modalValidation function nows should return String to indicates the changes value is not valid and null or empty String to indicates the changes value is valid
+## To Do
 
 To display tile with chips use param S2Tile.body and S2TileChips, instead of S2ChipsTile
 
@@ -88,24 +65,36 @@ The parameter choiceConfig.padding moved to choiceConfig.style.wrapperPadding
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
 ```dart
 dependencies:
   flutter_filter_dialog: ^0.0.9
 ```
-
+```dart
+import 'package:flutter_filter_dialog/flutter_filter_dialog.dart';
+```
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
+TODO: examples..
 to `/example` folder. 
 
 ```dart
 const like = 'sample';
 ```
 
-## Additional information
+# Features
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+* Select single or multiple choice
+* Open choices modal in full page, bottom sheet, or popup dialog
+* Various choices input (radio, checkbox, switch, chips, or custom widget)
+* Various choices layout (list, wrap, or grid)
+* Grouping choices with easy support to sticky header
+* Searchable choices with highlighted result
+* Disabled or hidden choices
+* Customizable trigger/tile widget
+* Customizable modal style
+* Customizable modal header style
+* Customizable modal footer
+* Customizable choices style
+* Build choice items from any `List`
+* Easy load async choice items
+* and many more
