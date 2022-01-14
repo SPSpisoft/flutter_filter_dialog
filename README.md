@@ -90,6 +90,10 @@ The parameter choiceConfig.padding moved to choiceConfig.style.wrapperPadding
 
 TODO: List prerequisites and provide or point to information on how to
 start using the package.
+```dart
+dependencies:
+  flutter_filter_dialog: ^0.0.9
+```
 
 ## Usage
 
