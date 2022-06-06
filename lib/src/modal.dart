@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 
+
 /// The same as [StatefulBuilder] but enhanced with prevent error when calling setState after disposed
 class S2Modal extends StatefulWidget {
   /// Creates a widget that both has state and delegates its build to a callback.
