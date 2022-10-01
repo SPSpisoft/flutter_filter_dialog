@@ -1151,7 +1151,7 @@ abstract class S2State<T> extends State<SmartSelect<T>> {
       autofocus: true,
       controller: filter!.ctrl,
       style: modalHeaderStyle.textStyle,
-      cursorColor: modalConfig.isFullPage ? Colors.white : theme.cursorColor,
+      cursorColor: modalConfig.isFullPage ? Colors.white : theme.cardColor,
       textInputAction: TextInputAction.search,
       decoration: InputDecoration.collapsed(
         hintText: modalConfig.filterHint ?? 'Search on $title',
@@ -1207,6 +1207,23 @@ abstract class S2State<T> extends State<SmartSelect<T>> {
   Widget get defaultConfirmButton {
     final VoidCallback? onPressed =
         selection!.isValid ? () => closeModal(confirmed: true) : null;
+    final ButtonStyle buttonStyle = TextButton.styleFrom(
+      backgroundColor: modalConfig.confirmIsDark ? modalConfig.confirmColor : null,
+      padding: EdgeInsets.all(0),
+      textStyle: TextStyle(color: modalConfig.confirmIsLight
+          ? modalConfig.confirmColor
+          : Colors.white),
+    );
+
+    final ButtonStyle buttonStyle2 = TextButton.styleFrom(
+      backgroundColor: modalConfig.confirmIsDark
+          ? modalConfig.confirmColor ?? Colors.blueGrey
+          : null,
+      padding: EdgeInsets.all(0),
+      textStyle: TextStyle(color: modalConfig.confirmIsLight
+          ? modalConfig.confirmColor
+          : Colors.white),
+    );
 
     if (modalConfig.confirmLabel != null) {
       if (modalConfig.confirmIcon != null) {
@@ -1214,14 +1231,15 @@ abstract class S2State<T> extends State<SmartSelect<T>> {
           child: Padding(
             padding: modalConfig.confirmMargin ??
                 const EdgeInsets.fromLTRB(0, 0, 10, 0),
-            child: FlatButton.icon(
+            child: ElevatedButton.icon(
               icon: modalConfig.confirmIcon!,
               label: modalConfig.confirmLabel!,
-              color:
-                  modalConfig.confirmIsDark ? modalConfig.confirmColor : null,
-              textColor: modalConfig.confirmIsLight
-                  ? modalConfig.confirmColor
-                  : Colors.white,
+              style: buttonStyle,
+              // color:
+              //     modalConfig.confirmIsDark ? modalConfig.confirmColor : null,
+              // textColor: modalConfig.confirmIsLight
+              //     ? modalConfig.confirmColor
+              //     : Colors.white,
               onPressed: onPressed,
             ),
           ),
@@ -1231,14 +1249,15 @@ abstract class S2State<T> extends State<SmartSelect<T>> {
           child: Padding(
             padding: modalConfig.confirmMargin ??
                 const EdgeInsets.fromLTRB(0, 0, 10, 0),
-            child: FlatButton(
+            child: ElevatedButton(
               child: modalConfig.confirmLabel!,
-              color: modalConfig.confirmIsDark
-                  ? modalConfig.confirmColor ?? Colors.blueGrey
-                  : null,
-              textColor: modalConfig.confirmIsLight
-                  ? modalConfig.confirmColor
-                  : Colors.white,
+              style: buttonStyle2,
+              // color: modalConfig.confirmIsDark
+              //     ? modalConfig.confirmColor ?? Colors.blueGrey
+              //     : null,
+              // textColor: modalConfig.confirmIsLight
+              //     ? modalConfig.confirmColor
+              //     : Colors.white,
               onPressed: onPressed,
             ),
           ),
