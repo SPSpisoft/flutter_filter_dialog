@@ -1294,7 +1294,7 @@ abstract class S2State<T> extends State<SmartSelect<T>> {
       shape: modalHeaderStyle.shape,
       elevation: modalHeaderStyle.elevation,
       // brightness: modalHeaderStyle.brightness, // Flutter < 2.5
-      systemOverlayStyle: SystemOverlayStyle(statusBarBrightness: modalHeaderStyle.brightness),
+      systemOverlayStyle: SystemUiOverlayStyle(statusBarBrightness: modalHeaderStyle.brightness),
       backgroundColor: modalHeaderStyle.backgroundColor,
       actionsIconTheme: modalHeaderStyle.actionsIconTheme,
       iconTheme: modalHeaderStyle.iconTheme,
