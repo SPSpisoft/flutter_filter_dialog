@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'model/builder.dart';
 import 'model/modal_theme.dart';
 import 'model/modal_config.dart';
@@ -1293,7 +1294,8 @@ abstract class S2State<T> extends State<SmartSelect<T>> {
       primary: true,
       shape: modalHeaderStyle.shape,
       elevation: modalHeaderStyle.elevation,
-      brightness: modalHeaderStyle.brightness,
+      // brightness: modalHeaderStyle.brightness, // Flutter < 2.5
+      systemOverlayStyle: SystemUiOverlayStyle(statusBarBrightness: modalHeaderStyle.brightness),
       backgroundColor: modalHeaderStyle.backgroundColor,
       actionsIconTheme: modalHeaderStyle.actionsIconTheme,
       iconTheme: modalHeaderStyle.iconTheme,
