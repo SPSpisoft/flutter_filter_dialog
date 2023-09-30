@@ -5,7 +5,7 @@ import 'choice_item.dart';
 typedef Future<S2Choice<T>?> S2SingleSelectedResolver<T>(T value);
 
 /// Function to return a `List` of [S2Choice] from a `List` of `value`
-typedef Future<List<S2Choice<T>>?> S2MultiSelectedResolver<T>(List<T>? value);
+typedef Future<List<S2Choice<T>>?> S2MultiSelectedResolver<T>(List<T>? value, List<T>? valueSaved);
 
 /// Chosen data class
 abstract class S2ChosenData<T> {
@@ -14,6 +14,8 @@ abstract class S2ChosenData<T> {
 
   /// Returns the value(s) data
   get value;
+  // /// Returns the valueLast(s) data => SPS
+  // get valueLast;
 
   /// Returns the title(s) data
   get title;
@@ -179,7 +181,7 @@ mixin S2MultiChosenData<T> on S2ChosenData<T> {
 
 class S2SingleChosen<T> extends S2ChosenData<T> with S2SingleChosenData<T> {
   /// Default constructor
-  S2SingleChosen(S2Choice<T>? choice) : _choice = choice;
+  S2SingleChosen(S2Choice<T>? choice) : _choice = choice ;
 
   /// The choice item
   final S2Choice<T>? _choice;
@@ -201,6 +203,7 @@ class S2MultiChosen<T> extends S2ChosenData<T> with S2MultiChosenData<T> {
   List<S2Choice<T>>? get choice {
     return _choice;
   }
+
 }
 
 abstract class S2ChosenNotifier<T> extends ChangeNotifier with S2ChosenData<T> {
@@ -278,6 +281,8 @@ abstract class S2Selected<T> extends S2ChosenNotifier<T> {
 
   /// Override the selected value with a new one, and validate it
   set value(covariant var value);
+  /// Override the selected value with a new one, and validate it => SPS
+  set valueSaved(covariant var value);
 }
 
 class S2SingleSelected<T> extends S2Selected<T> with S2SingleChosenData<T> {
@@ -285,13 +290,16 @@ class S2SingleSelected<T> extends S2Selected<T> with S2SingleChosenData<T> {
   S2SingleSelected({
     required T value,
     S2Choice<T>? choice,
+    T? valueSaved,
     this.resolver,
     this.validation,
     this.placeholder,
   })  : _value = value,
+        _valueSaved = valueSaved,
         _choice = choice;
 
   T _value;
+  T? _valueSaved;
 
   S2Choice<T>? _choice;
 
@@ -346,6 +354,12 @@ class S2SingleSelected<T> extends S2Selected<T> with S2SingleChosenData<T> {
     resolve();
   }
 
+  @override
+  set valueSaved(T val) {
+    _valueSaved = val;
+    resolve();
+  }
+
   /// Returns a single selected [S2Choice]
   @override
   S2Choice<T>? get choice {
@@ -366,22 +380,27 @@ class S2SingleSelected<T> extends S2Selected<T> with S2SingleChosenData<T> {
             ? title ?? placeholder ?? 'Select one'
             : error;
   }
+
 }
 
 class S2MultiSelected<T> extends S2Selected<T> with S2MultiChosenData<T> {
   /// Default Constructor
   S2MultiSelected({
     List<T>? value,
+    List<T>? valueSaved,
     List<S2Choice<T>>? choice,
     this.resolver,
     this.validation,
     this.placeholder,
   })  : _value = List<T>.from(value ?? []),
+        _valueSaved = List<T>.from(valueSaved ?? []),
         _choice = choice != null ? List<S2Choice<T>>.from(choice) : null;
 
-  List<T>? _value;
 
+  List<T>? _value;
+  List<T>? _valueSaved;
   List<S2Choice<T>>? _choice;
+
 
   /// A `String` to return in `toString` if the `title` is empty
   @override
@@ -411,7 +430,7 @@ class S2MultiSelected<T> extends S2Selected<T> with S2MultiChosenData<T> {
     notifyListeners();
 
     try {
-      _choice = await resolver?.call(_value);
+      _choice = await resolver?.call(_value, _valueSaved);
     } catch (e) {
       throw e;
     } finally {
@@ -424,12 +443,20 @@ class S2MultiSelected<T> extends S2Selected<T> with S2MultiChosenData<T> {
   set choice(List<S2Choice<T>>? choices) {
     _choice = List<S2Choice<T>>.from(choices ?? []);
     _value = null;
+    _valueSaved = null;
     validate();
   }
 
   @override
   set value(List<T>? val) {
     _value = List<T>.from(val ?? []);
+    _choice = null;
+    resolve();
+  }
+
+  @override
+  set valueSaved(List<T>? val) {
+    _valueSaved = List<T>.from(val ?? []);
     _choice = null;
     resolve();
   }
@@ -448,6 +475,14 @@ class S2MultiSelected<T> extends S2Selected<T> with S2MultiChosenData<T> {
         : _value;
   }
 
+  // /// return an array of `savedValue` of the selected [choice]
+  // @override
+  // List<T>? get valueSaved {
+  //   return isNotEmpty
+  //       ? choice!.map((S2Choice<T> item) => item.value).toList()
+  //       : _valueSaved;
+  // }
+
   @override
   String toString() {
     return isResolving == true
@@ -456,6 +491,7 @@ class S2MultiSelected<T> extends S2Selected<T> with S2MultiChosenData<T> {
             ? title?.join(', ') ?? placeholder ?? 'Select one or more'
             : error;
   }
+
 }
 
 abstract class S2Selection<T> extends S2ChosenNotifier<T> {
@@ -594,6 +630,7 @@ class S2MultiSelection<T> extends S2Selection<T> with S2MultiChosenData<T> {
       ..addAll(choices)
       ..toSet()
       ..toList();
+
   }
 
   /// Removes every value in supplied values from the selection
@@ -605,13 +642,22 @@ class S2MultiSelection<T> extends S2Selection<T> with S2MultiChosenData<T> {
   void toggle(List<S2Choice<T>> choices, {bool? pull}) {
     if (pull == true) {
       omit(choices);
+      // if(choicesLast != null) omit(choicesLast);
     } else if (pull == false) {
       merge(choices);
+      // if(choicesLast != null) merge(choicesLast);
     } else {
       if (hasAny(choices))
         omit(choices);
       else
         merge(choices);
+
+      // if(choicesLast != null) {
+      //   if (hasAny(choicesLast))
+      //     omit(choicesLast);
+      //   else
+      //     merge(choicesLast);
+      // }
     }
   }
 }

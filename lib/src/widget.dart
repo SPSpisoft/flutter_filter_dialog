@@ -129,9 +129,10 @@ class SmartSelect<T> extends StatefulWidget {
 
   final S2RefreshSelect<List<T>>? multiOnRefresh;
 
-  S2RefreshSelect<List<T>>? multiRefresh(List<T> m) {
+  S2RefreshSelect<List<T>>? multiRefresh(List<T> m, List<T> s) {
     // TODO: implement multiRefresh
     this.multiSelected!.value = m;
+    this.multiSelected!.valueSaved = s;
     throw UnimplementedError();
   }
 
@@ -221,6 +222,8 @@ class SmartSelect<T> extends StatefulWidget {
   /// The [selectedChoice] argument is current selected choice.
   ///
   /// The [selectedResolver] is function to resolve [selectedChoice] from [selectedValue]
+  ///
+  /// The [selectedSavedResolver] is function to resolve [selectedChoice] from [savedValue]
   ///
   /// The [onChange] called when value changed.
   ///
@@ -473,6 +476,7 @@ class SmartSelect<T> extends StatefulWidget {
         value: selectedValue,
         choice: selectedChoice,
         resolver: selectedResolver,
+        // resolverSaved: selectedSavedResolver,
         validation: validation,
         placeholder: placeholder,
       ),
@@ -546,9 +550,13 @@ class SmartSelect<T> extends StatefulWidget {
   ///
   /// The [selectedValue] argument is current selected value.
   ///
+  /// The [savedValue] argument is saved selected value.
+  ///
   /// The [selectedChoice] argument is current selected choice.
   ///
   /// The [selectedResolver] is function to resolve [selectedChoice] from [selectedValue]
+  ///
+  /// The [selectedSavedResolver] is function to resolve [selectedChoice] from [savedValue]
   ///
   /// The [onChange] called when value changed.
   ///
@@ -720,8 +728,9 @@ class SmartSelect<T> extends StatefulWidget {
     String? title,
     String placeholder = 'Select one or more',
     List<T>? selectedValue,
-    List<S2Choice<T>>? selectedChoice,
+    List<T>? savedValue,
     S2MultiSelectedResolver<T>? selectedResolver,
+    List<S2Choice<T>>? selectedChoice,
     ValueChanged<S2MultiSelected<T>?>? onChange,
     S2ChoiceSelect<S2MultiState<T>, S2Choice<T>>? onSelect,
     S2RefreshSelect<List<T>>? onRefresh,
@@ -755,6 +764,8 @@ class SmartSelect<T> extends StatefulWidget {
     S2ChoiceConfig? choiceConfig,
     S2ChoiceStyle? choiceStyle,
     S2ChoiceStyle? choiceActiveStyle,
+    S2ChoiceStyle? choiceLastStyle,
+    S2ChoiceStyle? choiceActiveLastStyle,
     S2ChoiceType? choiceType,
     S2ChoiceLayout? choiceLayout,
     Axis? choiceDirection,
@@ -798,8 +809,10 @@ class SmartSelect<T> extends StatefulWidget {
       isMultiChoice: true,
       multiSelected: S2MultiSelected<T>(
         value: selectedValue,
+        valueSaved: savedValue,
         choice: selectedChoice,
-        resolver: selectedResolver,
+        // resolver: selectedResolver,
+        // resolverSaved: selectedSavedResolver,
         validation: validation,
         placeholder: placeholder,
       ),
@@ -840,7 +853,9 @@ class SmartSelect<T> extends StatefulWidget {
             gridSpacing: choiceGridSpacing,
             useDivider: choiceDivider,
             style: choiceStyle,
+            styleLast: choiceLastStyle,
             activeStyle: choiceActiveStyle,
+            activeStyleLast: choiceActiveLastStyle,
             pageLimit: choicePageLimit,
             delay: choiceDelay,
           ),
@@ -875,6 +890,8 @@ class SmartSelect<T> extends StatefulWidget {
 abstract class S2State<T> extends State<SmartSelect<T>> {
   /// State of the selected choice(s)
   covariant S2Selected<T>? selected;
+
+  covariant S2Selected<T>? savedSelected;
 
   /// State of choice(s) selection in the modal
   covariant S2Selection<T>? selection;
@@ -960,7 +977,16 @@ abstract class S2State<T> extends State<SmartSelect<T>> {
   /// Returns the default style for unselected choice
   S2ChoiceStyle get defaultChoiceStyle {
     return S2ChoiceStyle(
-      titleStyle: const TextStyle(),
+      titleStyle: const TextStyle(fontWeight: FontWeight.normal),
+      subtitleStyle: const TextStyle(),
+      control: S2ChoiceControl.platform,
+      highlightColor: theme.highlightColor.withOpacity(.7),
+    );
+  }
+
+  S2ChoiceStyle get defaultChoiceLastStyle {
+    return S2ChoiceStyle(
+      titleStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.red),
       subtitleStyle: const TextStyle(),
       control: S2ChoiceControl.platform,
       highlightColor: theme.highlightColor.withOpacity(.7),
@@ -969,15 +995,19 @@ abstract class S2State<T> extends State<SmartSelect<T>> {
 
   /// Returns the default style for selected choice
   S2ChoiceStyle get defaultActiveChoiceStyle => defaultChoiceStyle;
+  S2ChoiceStyle get defaultLastChoiceStyle => defaultChoiceLastStyle;
+  S2ChoiceStyle get defaultActiveLastChoiceStyle => defaultChoiceLastStyle;
 
   /// Returns the choice config
   S2ChoiceConfig get choiceConfig => widget.choiceConfig;
 
   /// Returns the choice style
   S2ChoiceStyle? get choiceStyle => choiceConfig.style;
+  S2ChoiceStyle? get choiceStyleLast => choiceConfig.styleLast;
 
   /// Returns the active choice style
   S2ChoiceStyle? get choiceActiveStyle => choiceConfig.activeStyle;
+  S2ChoiceStyle? get choiceActiveStyleLast => choiceConfig.activeStyleLast;
 
   /// Returns the group config
   S2GroupConfig get groupConfig {
@@ -1403,10 +1433,23 @@ abstract class S2State<T> extends State<SmartSelect<T>> {
             }
           },
           style: defaultChoiceStyle.merge(choiceStyle).merge(choice.style),
+
           activeStyle: defaultActiveChoiceStyle
               .merge(choiceStyle)
               .merge(choice.style)
               .merge(choiceActiveStyle)
+              .merge(choice.activeStyle),
+
+          styleLast: defaultLastChoiceStyle
+              .merge(choiceStyle)
+              .merge(choice.styleLast)
+              .merge(choiceStyleLast)
+              .merge(choice.style),
+
+          activeStyleLast: defaultActiveLastChoiceStyle
+              .merge(choiceStyle)
+              .merge(choice.style)
+              .merge(choiceActiveStyleLast)
               .merge(choice.activeStyle),
         ),
       );
@@ -1740,8 +1783,10 @@ abstract class S2State<T> extends State<SmartSelect<T>> {
     // dispose everything
     choices?.removeListener(_choicesHandler);
     selected?.removeListener(_selectedHandler);
+    savedSelected?.removeListener(_selectedHandler);
     choices?.dispose();
     selected?.dispose();
+    savedSelected?.dispose();
     super.dispose();
   }
 }
@@ -1752,6 +1797,8 @@ class S2SingleState<T> extends S2State<T> {
   @override
   S2SingleSelected<T>? selected;
 
+  @override
+  S2SingleSelected<T>? savedSelected;
   /// State of choice(s) selection in the modal
   @override
   S2SingleSelection<T>? selection;
@@ -1821,6 +1868,18 @@ class S2SingleState<T> extends S2State<T> {
           );
         });
     }
+
+    // SPS ADD
+    // savedSelected?.dispose();
+    // if (widget.singleSelected != null) {
+    //   selected = widget.singleSelected!
+    //     ..addListener(_selectedHandler)
+    //     ..resolve(defaultResolver: (value) async {
+    //       return widget.choiceItems?.firstWhereOrNull(
+    //             (item) => item.value == value,
+    //       );
+    //     });
+    // }
   }
 
   @override
@@ -1961,27 +2020,36 @@ class S2MultiState<T> extends S2State<T> {
   @override
   S2MultiSelected<T>? selected;
 
+  S2MultiSelected<T>? savedSelected;
+
   /// State of choice(s) selection in the modal
   @override
   S2MultiSelection<T>? selection;
 
-  refresh(List<T>? reSelectedValue){
+  refresh(List<T>? reSelectedValue, List<T>? reSelectedSavedValue){
     widget.multiSelected!.value = reSelectedValue;
+    widget.multiSelected!.valueSaved = reSelectedSavedValue;
 
     selected = widget.multiSelected!
       ..addListener(_selectedHandler)
-      ..resolve(defaultResolver: (value) async {
+      ..resolve(defaultResolver: (value, valueSaved) async {
         return widget.choiceItems
             ?.where(
                 (S2Choice<T> item) => value?.contains(item.value) ?? false)
             .toList()
             .cast<S2Choice<T>>();
       });
-    // didUpdateWidget(this.widget);
-    // resolveSelection();
-    // resolveSelected();
-    // resolveChoices();
-    // setState(() { });
+
+    savedSelected = widget.multiSelected!
+      ..addListener(_selectedHandler)
+      ..resolve(defaultResolver: (value, valueSaved) async {
+        return widget.choiceItems
+            ?.where(
+                (S2Choice<T> item) => valueSaved?.contains(item.value) ?? false)
+            .toList()
+            .cast<S2Choice<T>>();
+      });
+
   }
 
   @override
@@ -2040,13 +2108,25 @@ class S2MultiState<T> extends S2State<T> {
   @override
   void resolveSelected() async {
     selected?.dispose();
+    savedSelected?.dispose();
+
     if (widget.multiSelected != null) {
       selected = widget.multiSelected!
         ..addListener(_selectedHandler)
-        ..resolve(defaultResolver: (value) async {
+        ..resolve(defaultResolver: (value, valueSaved) async {
           return widget.choiceItems
               ?.where(
                   (S2Choice<T> item) => value?.contains(item.value) ?? false)
+              .toList()
+              .cast<S2Choice<T>>();
+        });
+
+      savedSelected = widget.multiSelected!
+        ..addListener(_selectedHandler)
+        ..resolve(defaultResolver: (value, valueSaved) async {
+          return widget.choiceItems
+              ?.where(
+                  (S2Choice<T> item) => valueSaved?.contains(item.value) ?? false)
               .toList()
               .cast<S2Choice<T>>();
         });

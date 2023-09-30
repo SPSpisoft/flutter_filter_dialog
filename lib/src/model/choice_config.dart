@@ -96,8 +96,12 @@ class S2ChoiceConfig with Diagnosticable {
   /// Configure unselected choices item style
   final S2ChoiceStyle? style;
 
+  final S2ChoiceStyle? styleLast;
+
   /// Configure selected choices item style
   final S2ChoiceStyle? activeStyle;
+
+  final S2ChoiceStyle? activeStyleLast;
 
   /// Determines the physics of choices list widget
   final ScrollPhysics physics;
@@ -127,7 +131,9 @@ class S2ChoiceConfig with Diagnosticable {
     this.dividerThickness,
     this.overscrollColor,
     this.style,
+    this.styleLast,
     this.activeStyle,
+    this.activeStyleLast,
     this.physics = const ScrollPhysics(),
     this.pageLimit,
     this.delay,
@@ -162,7 +168,9 @@ class S2ChoiceConfig with Diagnosticable {
     double? dividerThickness,
     Color? overscrollColor,
     S2ChoiceStyle? style,
+    S2ChoiceStyle? styleLast,
     S2ChoiceStyle? activeStyle,
+    S2ChoiceStyle? activeStyleLast,
     ScrollPhysics? physics,
     int? pageLimit,
     Duration? delay,
@@ -183,7 +191,9 @@ class S2ChoiceConfig with Diagnosticable {
       dividerThickness: dividerThickness ?? this.dividerThickness,
       overscrollColor: overscrollColor ?? this.overscrollColor,
       style: this.style?.merge(style) ?? style,
+      styleLast: this.styleLast?.merge(style) ?? styleLast,
       activeStyle: this.activeStyle?.merge(activeStyle) ?? activeStyle,
+      activeStyleLast: this.activeStyleLast?.merge(activeStyle) ?? activeStyleLast,
       physics: physics ?? this.physics,
       pageLimit: pageLimit ?? this.pageLimit,
       delay: delay ?? this.delay,
@@ -212,7 +222,9 @@ class S2ChoiceConfig with Diagnosticable {
       dividerThickness: other.dividerThickness,
       overscrollColor: other.overscrollColor,
       style: other.style,
+      styleLast: other.styleLast,
       activeStyle: other.activeStyle,
+      activeStyleLast: other.activeStyleLast,
       physics: other.physics,
       pageLimit: other.pageLimit,
       delay: other.delay,

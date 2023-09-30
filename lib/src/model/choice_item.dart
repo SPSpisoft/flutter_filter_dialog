@@ -32,14 +32,20 @@ class S2Choice<T> with Diagnosticable {
   /// Individual unselected choice item style
   final S2ChoiceStyle? style;
 
+  final S2ChoiceStyle? styleLast;
+
   /// Individual selected choice item style
   final S2ChoiceStyle? activeStyle;
+
+  final S2ChoiceStyle? activeStyleLast;
 
   /// Callback to select choice
   final ValueSetter<bool?>? select;
 
   /// Whether the choice is selected or not
   final bool selected;
+  /// Whether the selection is synced/saved or not
+  final bool selectedSaved;
 
   /// Default constructor
   S2Choice({
@@ -51,9 +57,12 @@ class S2Choice<T> with Diagnosticable {
     this.hidden = false,
     this.meta,
     this.style,
+    this.styleLast,
     this.activeStyle,
+    this.activeStyleLast,
     this.select,
     this.selected = false,
+    this.selectedSaved = false,
   });
 
   /// Helper to create option list from any list
@@ -67,7 +76,9 @@ class S2Choice<T> with Diagnosticable {
     _S2OptionProp<E, bool>? hidden,
     _S2OptionProp<E, dynamic>? meta,
     _S2OptionProp<E, S2ChoiceStyle>? style,
+    _S2OptionProp<E, S2ChoiceStyle>? styleLast,
     _S2OptionProp<E, S2ChoiceStyle>? activeStyle,
+    _S2OptionProp<E, S2ChoiceStyle>? activeStyleLast,
   }) =>
       source
           .asMap()
@@ -82,7 +93,9 @@ class S2Choice<T> with Diagnosticable {
                 hidden: hidden?.call(index, item) ?? false,
                 meta: meta?.call(index, item),
                 style: style?.call(index, item),
+                styleLast: styleLast?.call(index, item),
                 activeStyle: activeStyle?.call(index, item),
+                activeStyleLast: activeStyleLast?.call(index, item),
               )))
           .values
           .toList();
@@ -107,7 +120,13 @@ class S2Choice<T> with Diagnosticable {
   @override
   int get hashCode => value.hashCode;
 
-  S2ChoiceStyle? get effectiveStyle => selected == true ? activeStyle : style;
+
+  S2ChoiceStyle? get effectiveStyle {
+    if(selected) print("selected ");
+    if(selectedSaved) print("selectedSaved");
+
+    return selected ? selectedSaved ? activeStyleLast : activeStyle : selectedSaved ? styleLast : style;
+  }
 
   /// Creates a copy of this [S2Choice] but with
   /// the given fields replaced with the new values.
@@ -120,7 +139,9 @@ class S2Choice<T> with Diagnosticable {
     bool? hidden,
     dynamic meta,
     S2ChoiceStyle? style,
+    S2ChoiceStyle? styleLast,
     S2ChoiceStyle? activeStyle,
+    S2ChoiceStyle? activeStyleLast,
     ValueSetter<bool?>? select,
     bool? selected,
   }) {
@@ -133,7 +154,9 @@ class S2Choice<T> with Diagnosticable {
       hidden: hidden ?? this.hidden,
       meta: meta ?? this.meta,
       style: style ?? this.style,
+      styleLast: styleLast ?? this.styleLast,
       activeStyle: activeStyle ?? this.activeStyle,
+      activeStyleLast: activeStyleLast ?? this.activeStyleLast,
       select: select ?? this.select,
       selected: selected ?? this.selected,
     );
@@ -154,7 +177,9 @@ class S2Choice<T> with Diagnosticable {
       hidden: other.hidden,
       meta: other.meta,
       style: other.style,
+      styleLast: other.styleLast,
       activeStyle: other.activeStyle,
+      activeStyleLast: other.activeStyleLast,
       select: other.select,
       selected: other.selected,
     );

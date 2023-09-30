@@ -27,13 +27,30 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+
+
+  List<List<int>> selList = [
+    [1, 2],
+    [],
+    []
+  ];
+
+  List<List<int>> selListCurrent = [
+    [0, 1],
+    [],
+    []
+  ];
+
+  bool reset = false;
+
+
+  MyHomePage({super.key, required this.title});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -48,6 +65,8 @@ class MyHomePage extends StatefulWidget {
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
+
+  void callBack(List<List<int>> selList) {}
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -66,6 +85,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    List<FilterModel> spCs = [
+      FilterModel(0, 0, "Mode 0", [
+        FilterOptionModel(0, 0, "A0"),
+        FilterOptionModel(1, 1, "B0"),
+        FilterOptionModel(2, 2, "C0")
+      ]),
+      FilterModel(1, 1, "Mode 1", [
+        FilterOptionModel(0, 0, "A1"),
+        FilterOptionModel(1, 1, "B1"),
+        FilterOptionModel(2, 2, "C1")
+      ]),
+      FilterModel(2, 2, "Mode 2", [
+        FilterOptionModel(0, 0, "A2"),
+        FilterOptionModel(1, 1, "B2"),
+        FilterOptionModel(2, 2, "C2")
+      ]),
+    ];
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -78,36 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
+      body: myWidget(spCs),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
@@ -116,9 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-
-  myWidget(){
-    List<FilterModel> spCs = [];
+  myWidget(List<FilterModel> spCs) {
     return Column(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -126,100 +131,251 @@ class _MyHomePageState extends State<MyHomePage> {
         Flexible(
           child: ListView.builder(
             itemCount: spCs.length,
+            shrinkWrap: true,
             scrollDirection: Axis.vertical,
             itemBuilder: (context, i) {
               FilterModel spC = spCs[i];
               List<S2Choice<int>> _choiceItems = [];
+              List<S2Choice<int>> _selectedChoice = [];
               for (int j = 0; j < spC.options.length; j++) {
-                _choiceItems.add(
-                    S2Choice(
+                _choiceItems.add(S2Choice(
                     value: spC.options[j].id,
                     title: spC.options[j].title,
                     style: const S2ChoiceStyle(
                         titleStyle:
-                        TextStyle(fontFamily: "Roboto", fontSize: 14))));
-              }
+                            TextStyle(fontFamily: "Roboto", fontSize: 14))));
 
-              Column(
+                if(j < 2) {
+                  _selectedChoice.add(S2Choice(
+                      value: spC.options[j].id,
+                      title: spC.options[j].title,
+                      style: const S2ChoiceStyle(
+                          titleStyle:
+                          TextStyle(fontFamily: "Roboto", fontSize: 14))));
+                }
+              }
+              // Text(spCs[i].title);
+
+              return Column(
                 children: [
-                  // SmartSelect<String>.multiple(
-                  //   modalConfig: S2ModalConfig(
-                  //     title:
-                  //     (spC.title),
-                  //   ),
-                  //   choiceActiveStyle: const S2ChoiceStyle(
-                  //       titleStyle:
-                  //       TextStyle(color: Colors.red)),
-                  //   modalHeaderStyle: const S2ModalHeaderStyle(),
-                  //   placeholder: "",
-                  //   // selectedValue: widget.selList[i],
-                  //   choiceItems: _choiceItems,
-                  //   modalType: S2ModalType.bottomSheet,
-                  //   onModalClose: (state, confirmed) {
-                  //     setState(() {
-                  //       widget.selList[i] =
-                  //           state.selection?.value ?? [];
-                  //     });
-                  //     widget.callBack(widget.selList);
-                  //   },
-                  //   choiceDivider: false,
-                  //   tileBuilder: (context, state) {
-                  //     if (widget.reset) {
-                  //       state.refresh(widget.selList[i]);
-                  //       if (i == spCs.length - 1) {
-                  //         widget.reset = false;
-                  //       }
-                  //     }
-                  //
-                  //     return S2Tile.fromState(
-                  //       state,
-                  //       isTwoLine: false,
-                  //       textStyle: const TextStyle(
-                  //           fontFamily: "Yekan", fontSize: 16),
-                  //       leading: CircleAvatar(
-                  //         backgroundColor:
-                  //         widget.selList[i]!.isNotEmpty
-                  //             ? Colors.red
-                  //             : Colors.blueGrey,
-                  //         child: Column(
-                  //           crossAxisAlignment:
-                  //           CrossAxisAlignment.center,
-                  //           mainAxisAlignment:
-                  //           MainAxisAlignment.center,
-                  //           children: [
-                  //             Text(
-                  //               widget.selList[i]!.length
-                  //                   .toString(),
-                  //               style: const TextStyle(
-                  //                   color: Colors.white,
-                  //                   fontSize: 12),
-                  //             ),
-                  //             const Padding(
-                  //               padding: EdgeInsets.all(2.0),
-                  //               child: Divider(
-                  //                 height: 2,
-                  //                 color: Colors.white,
-                  //               ),
-                  //             ),
-                  //             Text(
-                  //               spC.opTs.length.toString(),
-                  //               style: const TextStyle(
-                  //                   color: Colors.white,
-                  //                   fontSize: 12),
-                  //             ),
-                  //           ],
-                  //         ),
-                  //         // backgroundImage: NetworkImage(
-                  //         //   'https://source.unsplash.com/yeVtxxPxzbw/100x100',
-                  //         // ),
-                  //       ),
-                  //     );
-                  //   },
-                  //   onChange: (selected) => setState(() {
-                  //     widget.selList[i] = selected?.value ?? [];
-                  //     // widget.selList[i] = selected?.value;
-                  //   }),
-                  // ),
+                  /// multiple sample
+                  SmartSelect<int>.multiple(
+                    /// Header [Clickable => Open Dialog & Config Dialog]
+                    modalConfig: S2ModalConfig(
+                      //todo : Title
+                      title: (spC.title),
+                      //todo : dialog style
+                      style: const S2ModalStyle(
+                          backgroundColor: Colors.white,
+                          shape: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 5),
+                          ),
+                          elevation: 3),
+                      type: S2ModalType.popupDialog,
+
+                      //todo : filter
+                      useFilter: true,
+                      filterAuto: true,
+                      filterDelay: const Duration(milliseconds: 100),
+                      filterHint: "Filter.....",
+
+                      //todo : Confirm
+                      useConfirm: true,
+                      confirmIcon: const Icon(Icons.check),
+                      confirmLabel: Container(
+                          width: 10,
+                          height: 10,
+                          decoration: const BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                            color: Colors.white
+                          )),
+                      confirmColor: Colors.red,
+
+                      //todo: Other
+                      useHeader: true,
+
+                    ),
+
+                    //todo : Header Dialog
+
+                    modalHeaderStyle: const S2ModalHeaderStyle(
+                        shape: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            borderSide:
+                                BorderSide(color: Colors.white, width: 5)),
+                        backgroundColor: Colors.deepOrangeAccent,
+                        textStyle:
+                            TextStyle(color: Colors.white, fontSize: 14)),
+
+                    placeholder: "select ...",
+                    selectedValue: widget.selList[i],
+                    savedValue: widget.selListCurrent[i],
+                    // selectedChoice: _selectedChoice,
+                    choiceItems: _choiceItems,
+                    choiceType: S2ChoiceType.checkboxes,
+                    // choiceBuilder: (context, value, anotherValue) {
+                    //   return Text("data", style: TextStyle(
+                    //     color: anotherValue.selected ? Colors.red : Colors.black
+                    //   ),);
+                    // },
+
+
+                    // choiceStyle: S2ChoiceStyle(color: Colors.deepPurple),
+                    // choiceActiveStyle: const S2ChoiceStyle(
+                    //     titleStyle: TextStyle(
+                    //       color: Colors.green,
+                    //     )
+                    // ),
+                    //
+                    // choiceLastStyle: S2ChoiceStyle(color: Colors.yellow),
+                    // choiceActiveLastStyle: S2ChoiceStyle(color: Colors.red),
+
+                    modalType: S2ModalType.bottomSheet,
+                    onModalClose: (state, confirmed) {
+                      setState(() {
+                        widget.selList[i] = state.selection?.value ?? [];
+                      });
+                      widget.callBack(widget.selList);
+                    },
+                    choiceDivider: false,
+                    tileBuilder: (context, state) {
+                      if (widget.reset) {
+                        // state.refresh(widget.selList[i], widget.selListCurrent[i]);
+                        if (i == spCs.length - 1) {
+                          widget.reset = false;
+                        }
+                      }
+
+                      return S2Tile.fromState(
+                        state,
+                        isTwoLine: false,
+                        textStyle:
+                            const TextStyle(fontFamily: "Yekan", fontSize: 16),
+                        // leading: CircleAvatar(
+                        //   backgroundColor:
+                        //   widget.selList[i]!.isNotEmpty
+                        //       ? Colors.red
+                        //       : Colors.blueGrey,
+                        //   child: Column(
+                        //     crossAxisAlignment:
+                        //     CrossAxisAlignment.center,
+                        //     mainAxisAlignment:
+                        //     MainAxisAlignment.center,
+                        //     children: [
+                        //       Text(
+                        //         widget.selList[i]!.length
+                        //             .toString(),
+                        //         style: const TextStyle(
+                        //             color: Colors.white,
+                        //             fontSize: 12),
+                        //       ),
+                        //       const Padding(
+                        //         padding: EdgeInsets.all(2.0),
+                        //         child: Divider(
+                        //           height: 2,
+                        //           color: Colors.white,
+                        //         ),
+                        //       ),
+                        //       Text(
+                        //         spC.options.length.toString(),
+                        //         style: const TextStyle(
+                        //             color: Colors.white,
+                        //             fontSize: 12),
+                        //       ),
+                        //     ],
+                        //   ),
+                        //   // backgroundImage: NetworkImage(
+                        //   //   'https://source.unsplash.com/yeVtxxPxzbw/100x100',
+                        //   // ),
+                        // ),
+                      );
+                    },
+                    onChange: (selected) => setState(() {
+                      widget.selList[i] = selected?.value ?? [];
+                      // widget.selList[i] = selected?.value;
+                    }),
+                  ),
+
+                  /// single sample
+                  SmartSelect<int>.single(
+                    modalConfig: S2ModalConfig(
+                      title: (spC.title),
+                    ),
+                    choiceActiveStyle: const S2ChoiceStyle(
+                        titleStyle: TextStyle(color: Colors.green)),
+                    modalHeaderStyle: const S2ModalHeaderStyle(),
+                    placeholder: "",
+                    selectedValue: 0,
+                    choiceItems: _choiceItems,
+                    modalType: S2ModalType.bottomSheet,
+                    onModalClose: (state, confirmed) {
+                      setState(() {
+                        // widget.selList[i] =
+                        //     state.selection?.value ?? [];
+                      });
+                      widget.callBack(widget.selList);
+                    },
+                    choiceDivider: false,
+                    tileBuilder: (context, state) {
+                      if (widget.reset) {
+                        // state.refresh(widget.selList[i]);
+                        if (i == spCs.length - 1) {
+                          widget.reset = false;
+                        }
+                      }
+
+                      return S2Tile.fromState(
+                        state,
+                        isTwoLine: false,
+                        textStyle:
+                            const TextStyle(fontFamily: "Yekan", fontSize: 16),
+                        // leading: CircleAvatar(
+                        //   backgroundColor:
+                        //   widget.selList[i]!.isNotEmpty
+                        //       ? Colors.red
+                        //       : Colors.blueGrey,
+                        //   child: Column(
+                        //     crossAxisAlignment:
+                        //     CrossAxisAlignment.center,
+                        //     mainAxisAlignment:
+                        //     MainAxisAlignment.center,
+                        //     children: [
+                        //       Text(
+                        //         widget.selList[i]!.length
+                        //             .toString(),
+                        //         style: const TextStyle(
+                        //             color: Colors.white,
+                        //             fontSize: 12),
+                        //       ),
+                        //       const Padding(
+                        //         padding: EdgeInsets.all(2.0),
+                        //         child: Divider(
+                        //           height: 2,
+                        //           color: Colors.white,
+                        //         ),
+                        //       ),
+                        //       Text(
+                        //         spC.options.length.toString(),
+                        //         style: const TextStyle(
+                        //             color: Colors.white,
+                        //             fontSize: 12),
+                        //       ),
+                        //     ],
+                        //   ),
+                        //   // backgroundImage: NetworkImage(
+                        //   //   'https://source.unsplash.com/yeVtxxPxzbw/100x100',
+                        //   // ),
+                        // ),
+                      );
+                    },
+                    onChange: (selected) => setState(() {
+                      // widget.selList[i] = selected?.value ?? [];
+                      // widget.selList[i] = selected?.value;
+                    }),
+                  ),
                   const Divider(indent: 2),
                 ],
               );
