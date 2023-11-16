@@ -1007,7 +1007,7 @@ abstract class S2State<T> extends State<SmartSelect<T>> {
           fontSize: 13.5,
           fontWeight: FontWeight.w500,
           color: widget.modalConfig.isFullPage == true
-              ? (theme.primaryColorBrightness == Brightness.dark
+              ? (theme.brightness == Brightness.dark
                   ? Colors.white
                   : theme.errorColor)
               : theme.errorColor,
