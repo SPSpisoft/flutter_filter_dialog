@@ -133,7 +133,11 @@ class S2Tile<T> extends StatelessWidget {
     this.padding,
     this.body,
   })  : title = title ?? state.titleWidget(textStyle),
-        value = value ?? Text(state.selected.toString(), style: textStyleValue, ),
+        value = value ??
+            Text(
+              state.selected.toString(),
+              style: textStyleValue,
+            ),
         onTap = onTap ?? state.showModal,
         isLoading = isLoading ?? state.selected?.isResolving ?? false,
         isError = isError ?? state.selected?.isNotValid ?? false,
@@ -160,7 +164,6 @@ class S2Tile<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return body == null ? _tileWidget : _tileWithBodyWidget;
   }
-
 
   Widget get _tileWidget {
     return ListTile(
@@ -224,7 +227,7 @@ class S2Tile<T> extends StatelessWidget {
         return DefaultTextStyle.merge(
           child: isLoading == true ? _loadingWidget : value,
           style: isError == true
-              ? TextStyle(color: Theme.of(context).errorColor)
+              ? TextStyle(color: Theme.of(context).colorScheme.error)
               : null,
           overflow: TextOverflow.ellipsis,
           maxLines: 1,
