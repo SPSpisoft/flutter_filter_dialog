@@ -8,7 +8,7 @@ typedef Future<S2Choice<T>?> S2SingleSelectedResolver<T>(T value);
 typedef Future<List<S2Choice<T>>?> S2MultiSelectedResolver<T>(List<T>? value, List<T>? valueSaved);
 
 /// Chosen data class
-abstract class S2ChosenData<T> {
+abstract mixin class S2ChosenData<T> {
   /// Returns the choice item(s)
   get choice;
 
