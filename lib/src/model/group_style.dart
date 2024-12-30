@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
-import 'dart:ui';
 
 /// Configure choices group header style
 @immutable

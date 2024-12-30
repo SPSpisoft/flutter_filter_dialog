@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-// import '../state/filter.dart';
 import '../widget.dart';
 import 'choice_item.dart';
 import 'group_data.dart';

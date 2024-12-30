@@ -1,7 +1,7 @@
 name: flutter_filter_dialog
 description: Easily convert your usual single/multiple select or dropdown into page, dialog, or bottom sheet with various choice input such as radio, checkbox, switch, chips, or custom widget.
-version: 1.2.1
-homepage: https://github.com/vonarian/flutter_filter_dialog
+version: 1.2.3
+homepage: https://github.com/SPSpisoft/flutter_filter_dialog
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -9,12 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  collection: ^1.18.0
-  dio: ^5.3.3
+  collection: ^1.19.0
+  dio: ^5.7.0
   sticky_headers: ^0.3.0+2
 
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-
-flutter:

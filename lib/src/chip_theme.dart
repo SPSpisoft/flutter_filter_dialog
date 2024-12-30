@@ -66,7 +66,7 @@ class S2ChipTheme extends StatelessWidget {
         ? primaryColor
         : outlined == true
             ? Colors.transparent
-            : primaryColor?.withOpacity(opacity ?? backgroundAlpha);
+            : primaryColor?.withValues(alpha: opacity ?? backgroundAlpha);
     final Color? disabledColor = primaryColor?.withAlpha(disabledAlpha);
 
     final Color secondaryColor = color ?? Theme.of(context).primaryColor;
@@ -74,7 +74,7 @@ class S2ChipTheme extends StatelessWidget {
         ? secondaryColor
         : outlined == true
             ? Colors.transparent
-            : secondaryColor.withOpacity(opacity ?? backgroundAlpha);
+            : secondaryColor.withValues(alpha:opacity ?? backgroundAlpha);
 
     final Color? foregroundColor = raised == true
         ? Colors.white
@@ -98,8 +98,8 @@ class S2ChipTheme extends StatelessWidget {
         ? StadiumBorder(
             side: BorderSide(
               color: selected == true
-                  ? secondaryColor.withOpacity(opacity ?? borderAlpha)
-                  : primaryColor!.withOpacity(opacity ?? borderAlpha),
+                  ? secondaryColor.withValues(alpha: opacity ?? borderAlpha)
+                  : primaryColor!.withValues(alpha: opacity ?? borderAlpha),
             ),
           )
         : null;

@@ -12,3 +12,6 @@ debug
 
 ## 1.2.0
 review
+
+## 1.2.3
+Review & Synchronization with the latest version of Dart and Flutter.

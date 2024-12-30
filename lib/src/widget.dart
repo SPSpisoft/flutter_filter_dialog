@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
 import 'model/builder.dart';
@@ -15,8 +14,6 @@ import 'model/group_sort.dart';
 import 'model/chosen.dart';
 import 'state/choices.dart';
 import 'state/filter.dart';
-// import 'state/selected.dart';
-// import 'state/selection.dart';
 import 'choices_resolver.dart';
 import 'tile/tile.dart';
 import 'utils/debouncer.dart';
@@ -980,7 +977,7 @@ abstract class S2State<T> extends State<SmartSelect<T>> {
       titleStyle: const TextStyle(fontWeight: FontWeight.normal),
       subtitleStyle: const TextStyle(),
       control: S2ChoiceControl.platform,
-      highlightColor: theme.highlightColor.withOpacity(.7),
+      highlightColor: theme.highlightColor.withValues(alpha:.7),
     );
   }
 
@@ -989,7 +986,7 @@ abstract class S2State<T> extends State<SmartSelect<T>> {
       titleStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.red),
       subtitleStyle: const TextStyle(),
       control: S2ChoiceControl.platform,
-      highlightColor: theme.highlightColor.withOpacity(.7),
+      highlightColor: theme.highlightColor.withValues(alpha: 0.7),
     );
   }
 

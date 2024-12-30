@@ -332,7 +332,7 @@ class S2SingleSelected<T> extends S2Selected<T> with S2SingleChosenData<T> {
     notifyListeners();
 
     try {
-      _choice = await resolver?.call(_value);
+      _choice = await resolver?.call(_valueSaved?? _value);
     } catch (e) {
       throw e;
     } finally {
@@ -369,7 +369,7 @@ class S2SingleSelected<T> extends S2Selected<T> with S2SingleChosenData<T> {
   /// Returns [choice.value]
   @override
   T get value {
-    return choice?.value ?? _value;
+    return choice?.value ?? _valueSaved ?? _value;
   }
 
   @override
